@@ -9,7 +9,7 @@
     "orientation": "portrait",
     "icon": "./assets/images/.png",
     "splash": {
-      "image": "./assets/images/splash-logo-all.png",
+      "image": "./assets/images/slider4.png",
       "resizeMode": "contain",
       "backgroundColor": "#191015"
     },
@@ -68,6 +68,11 @@
     ],
     "experiments": {
       "tsconfigPaths": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "8b9dc91e-343f-4528-9b48-ae67719e4870"
+      }
     }
   },
   "ignite": {

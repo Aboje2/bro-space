@@ -32,10 +32,10 @@ const Card = () => {
   )
 }
 
-export const EventsScreen: FC<EventsScreenProps> = observer(function EventsScreen() {
+export const EventsScreen: FC<EventsScreenProps> = observer(function EventsScreen(_props) {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
-  const navigation = useNavigation()
+  const { navigation } = _props
 
   // Pull in navigation via hook
 

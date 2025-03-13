@@ -92,7 +92,9 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
             : undefined
 
         setAuthToken(accessToken)
-        setRefreshToken(res?.data?.data?.access as string)
+        saveString(BROSPACE.USER, accessToken as string)
+        setRefreshToken(res?.data?.data?.refresh as string)
+        saveString(BROSPACE.REFRESH_TOKEN, res?.data?.data?.refresh as string)
         setIsSubmitted(false)
         setAuthPassword("")
         setAuthEmail("")

@@ -21,12 +21,12 @@ const catImages = [
   { img: grid1, title: "Adventure" },
 ]
 
-export const CategoryScreen: FC<CategoryScreenProps> = observer(function CategoryScreen() {
+export const CategoryScreen: FC<CategoryScreenProps> = observer(function CategoryScreen(_props) {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
 
   // Pull in navigation via hook
-  const navigation = useNavigation()
+  const { navigation } = _props
   return (
     <Screen
       preset="scroll"

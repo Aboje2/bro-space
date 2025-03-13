@@ -7,15 +7,15 @@ import { colors, spacing } from "app/theme"
 import { useNavigation } from "@react-navigation/native"
 import * as DocumentPicker from "expo-document-picker"
 import useRecorder from "../../hooks/recording"
-// import { useAudioRecorder, RecordingOptions, AudioModule, RecordingPresets } from "expo-audio"
+
 // import { useStores } from "app/models"
 
 interface AnanymousScreenProps extends AppStackScreenProps<"Ananymous"> {}
 
-export const AnanymousScreen: FC<AnanymousScreenProps> = observer(function AnanymousScreen() {
+export const AnanymousScreen: FC<AnanymousScreenProps> = observer(function AnanymousScreen(_props) {
   const [toggler, setToggler] = React.useState(false)
   const [images, setImages] = React.useState<string[]>([])
-  const navigation = useNavigation()
+  const { navigation } = _props
   const { startRecording, stopRecording, recording, recordingDuration } = useRecorder()
 
   // Pull in one of our MST stores

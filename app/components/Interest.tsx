@@ -5,6 +5,7 @@ import { colors, typography } from "app/theme"
 import { Text, Icon } from "app/components"
 import { Audio, AVPlaybackStatus } from "expo-av"
 import Slider from "@react-native-community/slider"
+import { AppNavigationProp } from "app/navigators/AppNavigator"
 import { useNavigation } from "@react-navigation/native"
 const icomingsound = require("../../assets/sounds/my-first-sound.mp3")
 const firstVac = require("../../assets/images/vac1.png")
@@ -30,7 +31,7 @@ export const Interest = observer(function Interest(props: InterestProps) {
   const [duration, setDuration] = useState<number>(0) // Total duration
   const [position, setPosition] = useState<number>(0) // Current playback position
 
-  const navigation = useNavigation()
+  const navigation = useNavigation<AppNavigationProp>()
 
   async function playSound(): Promise<void> {
     console.log("Loading Sound")

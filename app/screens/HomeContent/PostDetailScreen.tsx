@@ -9,12 +9,14 @@ import { colors, spacing } from "app/theme"
 
 interface PostDetailScreenProps extends AppStackScreenProps<"PostDetail"> {}
 
-export const PostDetailScreen: FC<PostDetailScreenProps> = observer(function PostDetailScreen() {
+export const PostDetailScreen: FC<PostDetailScreenProps> = observer(function PostDetailScreen(
+  _props,
+) {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
 
   // Pull in navigation via hook
-  const navigation = useNavigation()
+  const { navigation } = _props
   return (
     <Screen
       preset="scroll"

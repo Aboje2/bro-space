@@ -3,20 +3,20 @@ import { observer } from "mobx-react-lite"
 import { ViewStyle, View, StyleSheet, ImageBackground, TouchableOpacity } from "react-native"
 import { AppStackScreenProps } from "app/navigators"
 import { Screen, Text, Icon, Post } from "app/components"
-import { useNavigation } from "@react-navigation/native"
+
 import { colors, spacing } from "app/theme"
 const wellnessImg = require("../../../assets/images/categoryImg.png")
 // import { useStores } from "app/models"
 
 interface WellnessScreenProps extends AppStackScreenProps<"Wellness"> {}
 
-export const WellnessScreen: FC<WellnessScreenProps> = observer(function WellnessScreen() {
+export const WellnessScreen: FC<WellnessScreenProps> = observer(function WellnessScreen(_props) {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
 
   // Pull in navigation via hook
 
-  const navigation = useNavigation()
+  const { navigation } = _props
   return (
     <Screen
       preset="scroll"

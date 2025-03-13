@@ -21,12 +21,12 @@ const previewItems = [
   { title: "Event description", value: "Connecting devs" },
 ]
 
-export const PreviewScreen: FC<PreviewScreenProps> = observer(function PreviewScreen() {
+export const PreviewScreen: FC<PreviewScreenProps> = observer(function PreviewScreen(_props) {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
 
   // Pull in navigation via hook
-  const navigation = useNavigation()
+  const { navigation } = _props
   return (
     <Screen
       preset="scroll"

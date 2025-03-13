@@ -10,7 +10,7 @@ import { useNavigation } from "@react-navigation/native"
 interface ResetPasswordCodeScreenProps extends AppStackScreenProps<"ResetPasswordCode"> {}
 
 export const ResetPasswordCodeScreen: FC<ResetPasswordCodeScreenProps> = observer(
-  function ResetPasswordCodeScreen() {
+  function ResetPasswordCodeScreen(_props) {
     const [otp, setOtp] = useState(["", "", "", ""])
     const [resendOtp, setResendOtp] = useState(false)
     const inputRef = useRef<TextInput[]>([])
@@ -18,7 +18,7 @@ export const ResetPasswordCodeScreen: FC<ResetPasswordCodeScreenProps> = observe
     // const { someStore, anotherStore } = useStores()
 
     // Pull in navigation via hook
-    const navigation = useNavigation()
+    const { navigation } = _props
 
     const handleChange = (value: string, index: number) => {
       console.log(value, "new index " + index)

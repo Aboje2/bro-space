@@ -95,9 +95,14 @@ export const CreateAccountScreen: FC<CreateAccountScreenProps> = observer(
       accountCreated
         .mutateAsync(data)
         .then((result) => {
-          // setAuthToken(result?.data?.data?.refresh.access as string)
-          // setRefreshToken(result?.data?.data?.tokens.access as string)
-          setAuthToken(Date().toString())
+          const accessToken = result?.data?.data?.tokens?.access
+          if (accessToken) {
+            console.log(accessToken, "Access Token")
+            setAuthToken(accessToken)
+            saveString(BROSPACE.USER, accessToken)
+            saveString(BROSPACE.REFRESH_TOKEN, result?.data?.data?.tokens?.refresh)
+            setRefreshToken(result?.data?.data?.tokens.access as string)
+          }
         })
         .catch((err) => {
           console.log(err.response?.data || err.message, "axios error") // Show full error message

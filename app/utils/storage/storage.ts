@@ -7,7 +7,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
  */
 export async function loadString(key: string): Promise<string | null> {
   try {
-    return await AsyncStorage.getItem(key)
+    const data = await AsyncStorage.getItem(key)
+
+    if (!data) return null
+    console.log(data, "getting data from load string")
+    return data
   } catch {
     // not sure why this would fail... even reading the RN docs I'm unclear
     return null
@@ -34,10 +38,11 @@ export async function saveString(key: string, value: string): Promise<boolean> {
  *
  * @param key The key to fetch.
  */
-export async function load(key: string): Promise<unknown | null> {
+export async function load<T>(key: string): Promise<T | null> {
   try {
-    const almostThere = await AsyncStorage.getItem(key)
-    return JSON.parse(almostThere ?? "")
+    const data = await AsyncStorage.getItem(key)
+    if (!data) return null // Handle missing data
+    return JSON.parse(data) as T // Safely parse JSON
   } catch {
     return null
   }
@@ -49,7 +54,7 @@ export async function load(key: string): Promise<unknown | null> {
  * @param key The key to fetch.
  * @param value The value to store.
  */
-export async function save(key: string, value: unknown): Promise<boolean> {
+export async function save<T>(key: string, value: T): Promise<boolean> {
   try {
     await AsyncStorage.setItem(key, JSON.stringify(value))
     return true

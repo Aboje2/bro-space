@@ -1,9 +1,9 @@
 import { ENDPOINTS } from "../../utils/constant"
-// import { ILoginRes } from "@/types/api.types"
+import { accountResponse } from "app/services/api/api.types"
 import useCustomMutation from "../../hooks/requestHooks/use-mutationaction"
 
 const useCreateAccount = () => {
-  return useCustomMutation<FormData>({
+  return useCustomMutation<accountResponse>({
     method: "post",
     endpoint: ENDPOINTS.CREATE_USER,
     // showSuccessToast: false,

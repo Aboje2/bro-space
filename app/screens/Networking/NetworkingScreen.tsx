@@ -11,12 +11,14 @@ const bgImage = require("../../../assets/images/bg-frame.png")
 
 interface NetworkingScreenProps extends DemoTabScreenProps<"Networking"> {}
 // DemoShowroomScreen: FC<DemoTabScreenProps<"DemoShowroom">> =
-export const NetworkingScreen: FC<NetworkingScreenProps> = observer(function NetworkingScreen() {
+export const NetworkingScreen: FC<NetworkingScreenProps> = observer(function NetworkingScreen(
+  _props,
+) {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
 
   // Pull in navigation via hook
-  const navigation = useNavigation()
+  const { navigation } = _props
   const [tab, setTab] = useState("Hobbies")
   const tabText = ["Hobbies", "Career paths"]
   const bgColor = [

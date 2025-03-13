@@ -12,12 +12,12 @@ import { useNavigation } from "@react-navigation/native"
 interface ResetPasswordScreenProps extends AppStackScreenProps<"ResetPassword"> {}
 
 export const ResetPasswordScreen: FC<ResetPasswordScreenProps> = observer(
-  function ResetPasswordScreen() {
+  function ResetPasswordScreen(_props) {
     // Pull in one of our MST stores
     // const { someStore, anotherStore } = useStores()
 
     // Pull in navigation via hook
-    const navigation = useNavigation()
+    const { navigation } = _props
     return (
       <Screen
         preset="scroll"

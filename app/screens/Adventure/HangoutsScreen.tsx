@@ -9,13 +9,13 @@ import { useNavigation } from "@react-navigation/native"
 
 interface HangoutsScreenProps extends AppStackScreenProps<"Hangouts"> {}
 
-export const HangoutsScreen: FC<HangoutsScreenProps> = observer(function HangoutsScreen() {
+export const HangoutsScreen: FC<HangoutsScreenProps> = observer(function HangoutsScreen(_props) {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
 
   // Pull in navigation via hook
   const [paymentMethod, setPaymentMethod] = useState("")
-  const navigation = useNavigation()
+  const { navigation } = _props
   const payment = [
     { value: "cash", label: "Cash" },
     { value: "Transfer", label: "Transfer" },

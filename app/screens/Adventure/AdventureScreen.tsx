@@ -10,12 +10,12 @@ import { useNavigation } from "@react-navigation/native"
 
 interface AdventureScreenProps extends DemoTabScreenProps<"Adventure"> {}
 
-export const AdventureScreen: FC<AdventureScreenProps> = observer(function AdventureScreen() {
+export const AdventureScreen: FC<AdventureScreenProps> = observer(function AdventureScreen(_props) {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
 
   // Pull in navigation via hook
-  const navigation = useNavigation()
+  const { navigation } = _props
   const [tab, setTab] = useState("Hobbies")
   const tabText = ["Hobbies", "Career paths"]
   return (

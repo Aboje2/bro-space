@@ -5,24 +5,23 @@ import { MethodTypes, SecureRequestProps } from "../api/api.types"
 import { saveString, loadString } from "../../utils/storage/storage"
 import { useStores } from "app/models"
 
-// axios.interceptors.request.use(
-//   (config) => {
-//     const {
-//       authenticationStore: { setAuthToken, authToken },
-//     } = useStores()
-//     const token = loadString(BROSPACE.STOREID)
-//     console.log(authToken, "authToken value")
-//     console.log(token, "what token are we receiving")
-//     if (token) {
-//       config.headers["Authorization"] = "Bearer " + token
-//     }
+axios.interceptors.request.use(
+  async (config) => {
+    // const {
+    //   authenticationStore: { authToken: token },
+    // } = useStores()
+    const token = await loadString(BROSPACE.USER)
 
-//     return config
-//   },
-//   (error) => {
-//     Promise.reject(error)
-//   },
-// )
+    if (token) {
+      config.headers["Authorization"] = "Bearer " + token
+    }
+
+    return config
+  },
+  (error) => {
+    Promise.reject(error)
+  },
+)
 
 // axios.interceptors.response.use(
 //   (response) => {
@@ -75,7 +74,7 @@ export const secureRequest = async ({
   headers: requestHeader,
 }: SecureRequestProps) => {
   const givenMethod = method.toLocaleLowerCase() as MethodTypes
-  console.log(body, "body in bro api test")
+
   // const headers = { ...requestHeader }
   const headers = {
     Accept: "application/json;charset=utf-8",

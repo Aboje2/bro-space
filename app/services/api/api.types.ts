@@ -60,3 +60,20 @@ export interface ResponseErrorType {
   status: number
   errors?: Record<string, unknown>
 }
+
+export interface accountResponse {
+  uuid: string
+  email: string
+  phone_number: string
+  full_name: string
+  profile_picture: string
+  gender: string
+  location: string
+  username: string
+  is_verified: boolean
+  is_active: boolean
+  tokens: {
+    refresh: string
+    access: string
+  }
+}

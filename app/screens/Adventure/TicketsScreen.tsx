@@ -9,7 +9,7 @@ import { colors, spacing } from "app/theme"
 
 interface TicketsScreenProps extends AppStackScreenProps<"Tickets"> {}
 
-export const TicketsScreen: FC<TicketsScreenProps> = observer(function TicketsScreen() {
+export const TicketsScreen: FC<TicketsScreenProps> = observer(function TicketsScreen(_props) {
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
 
@@ -22,7 +22,7 @@ export const TicketsScreen: FC<TicketsScreenProps> = observer(function TicketsSc
     { title: "Phone number", value: "0803 808 7096" },
     { title: "Seat number", value: "0217" },
   ]
-  const navigation = useNavigation()
+  const { navigation } = _props
   return (
     <Screen
       preset="scroll"
