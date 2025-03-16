@@ -6,6 +6,7 @@ import {
   StyleProp,
   TextStyle,
   ViewStyle,
+  ActivityIndicator,
 } from "react-native"
 import { colors, spacing, typography } from "../theme"
 import { Text, TextProps } from "./Text"
@@ -79,6 +80,7 @@ export interface ButtonProps extends PressableProps {
    * An optional style override for the disabled state
    */
   disabledStyle?: StyleProp<ViewStyle>
+  isLoading?: boolean
 }
 
 /**
@@ -109,6 +111,7 @@ export function Button(props: ButtonProps) {
     RightAccessory,
     LeftAccessory,
     disabled,
+    isLoading,
     disabledStyle: $disabledViewStyleOverride,
     ...rest
   } = props
@@ -145,25 +148,36 @@ export function Button(props: ButtonProps) {
     <Pressable
       style={$viewStyle}
       accessibilityRole="button"
-      accessibilityState={{ disabled: !!disabled }}
+      accessibilityState={{ disabled: !!disabled || isLoading }}
       {...rest}
-      disabled={disabled}
+      disabled={disabled || isLoading}
     >
       {(state) => (
         <>
           {!!LeftAccessory && (
-            <LeftAccessory style={$leftAccessoryStyle} pressableState={state} disabled={disabled} />
+            <LeftAccessory
+              style={$leftAccessoryStyle}
+              pressableState={state}
+              disabled={disabled || isLoading}
+            />
           )}
 
-          <Text tx={tx} text={text} txOptions={txOptions} style={$textStyle(state)}>
+          {/* <Text tx={tx} text={text} txOptions={txOptions} style={$textStyle(state)}>
             {children}
-          </Text>
+          </Text> */}
+          {isLoading ? ( // 👈 Show loader if isLoading is true
+            <ActivityIndicator color="white" size="small" />
+          ) : (
+            <Text tx={tx} text={text} txOptions={txOptions} style={$textStyle(state)}>
+              {children}
+            </Text>
+          )}
 
           {!!RightAccessory && (
             <RightAccessory
               style={$rightAccessoryStyle}
               pressableState={state}
-              disabled={disabled}
+              disabled={disabled || isLoading}
             />
           )}
         </>

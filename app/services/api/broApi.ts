@@ -3,13 +3,9 @@ import axios from "axios"
 import { ENDPOINTS, BROSPACE } from "../../utils/constant"
 import { MethodTypes, SecureRequestProps } from "../api/api.types"
 import { saveString, loadString } from "../../utils/storage/storage"
-import { useStores } from "app/models"
 
 axios.interceptors.request.use(
   async (config) => {
-    // const {
-    //   authenticationStore: { authToken: token },
-    // } = useStores()
     const token = await loadString(BROSPACE.USER)
 
     if (token) {
@@ -23,49 +19,42 @@ axios.interceptors.request.use(
   },
 )
 
-// axios.interceptors.response.use(
-//   (response) => {
-//     return response
-//   },
-//   function (error) {
-//     const baseURL = ENDPOINTS.BASE_URL
-//     const originalRequest = error.config
-//     // const { refresh } = JSON.parse(localStorage.getItem(QUIKEE.REFRESH_TOKEN) || "{}")
-//     const refresh = loadString("refresh")
-//     let retryNum = 0
-//     if (
-//       error?.response?.status === 401 &&
-//       (error?.response?.data?.message === "Authentication credentials were not provided." ||
-//         error?.response?.data?.message === "Given token not valid for any token type")
-//       // &&
-//       // refresh
-//     ) {
-//       // const { refresh } = JSON.parse(localStorage.getItem(QUIKEE.REFRESH_TOKEN) || "{}")
-//       retryNum++
-//       return axios
-//         .post(baseURL + ENDPOINTS.AUTH_REFRESH_TOKEN, {
-//           refresh,
-//         })
-//         .then((res) => {
-//           if (res.status === 200 || res.status === 201) {
-//             // window.localStorage.setItem(
-//             //   QUIKEE.USER,
-//             //   JSON.stringify({ token: res?.data?.data?.access }),
-//             // )
+axios.interceptors.response.use(
+  (response) => {
+    return response
+  },
+  async function (error) {
+    const baseURL = ENDPOINTS.BASE_URL
+    const originalRequest = error.config
 
-//             saveString(BROSPACE.USER, "")
-//             axios.defaults.headers.common["Authorization"] = "Bearer " + res?.data?.data?.access
-//             return axios(originalRequest)
-//           }
-//         })
-//         .catch((err) => {
-//           console.log(err)
-//           window.location.replace("/login")
-//         })
-//     }
-//     return Promise.reject(error)
-//   },
-// )
+    const refresh = await loadString(BROSPACE.REFRESH_TOKEN)
+    let retryNum = 0
+    if (
+      error?.response?.status === 401 &&
+      (error?.response?.data?.message === "Authentication credentials were not provided." ||
+        error?.response?.data?.message === "Given token not valid for any token type") &&
+      refresh
+    ) {
+      retryNum++
+      return axios
+        .post(baseURL + ENDPOINTS.AUTH_REFRESH_TOKEN, {
+          refresh,
+        })
+        .then((res) => {
+          if (res.status === 200 || res.status === 201) {
+            saveString(BROSPACE.USER, res?.data?.data?.access)
+            axios.defaults.headers.common["Authorization"] = "Bearer " + res?.data?.data?.access
+            return axios(originalRequest)
+          }
+        })
+        .catch((err) => {
+          console.log(err)
+          window.location.replace("/login")
+        })
+    }
+    return Promise.reject(error)
+  },
+)
 
 export const secureRequest = async ({
   url,
@@ -82,7 +71,7 @@ export const secureRequest = async ({
     ...requestHeader,
   }
 
-  const isFormData = body instanceof FormData
+  // const isFormData = body instanceof FormData
 
   if (givenMethod === "get" || givenMethod === "delete") {
     //dont include body in GET request request will fail

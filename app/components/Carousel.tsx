@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react"
+import React, { useRef, useState, useEffect } from "react"
 import {
   View,
   Image,
@@ -11,7 +11,10 @@ import {
 import { observer } from "mobx-react-lite"
 import { colors, typography } from "app/theme"
 import { Text, Icon } from "app/components"
+import { useStores } from "app/models"
 import { useNavigation } from "@react-navigation/native"
+import { AppNavigationProp } from "app/navigators/AppNavigator"
+import useGetCategories from "app/hooks/category/get-category"
 import Carousel, { Pagination } from "react-native-snap-carousel"
 const fourthSlide = require("../../assets/images/slider4.png")
 const firstSlide = require("../../assets/images/slider1.png")
@@ -28,7 +31,7 @@ export interface CarouselProps {
 /**
  * Describe your component here
  */
-const data = [
+const datas = [
   { id: "1", image: fourthSlide },
   { id: "2", image: firstSlide },
   { id: "3", image: secondSlide },
@@ -38,13 +41,22 @@ const data = [
 ]
 const screenWidth = Dimensions.get("window").width
 const ITEMS_PER_PAGE = 3
+
+
 export const Carousels = observer(function Carousels(props: CarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const flatListRef = useRef<FlatList>(null)
+  const categories = useGetCategories()
+  const data = categories?.data?.data?.data || []
+  // console.log("people that have what is to say", categories?.data?.data?.data[0], "the data in carousel")
+  const navigation = useNavigation<AppNavigationProp>()
+  
+const totalPages = Math.ceil( data.length / ITEMS_PER_PAGE)
+  
+  
+ 
 
-  const navigation = useNavigation()
-  const totalPages = Math.ceil(data.length / ITEMS_PER_PAGE)
-
+  
   const handleNext = () => {
     if (currentIndex < totalPages - 1) {
       setCurrentIndex((prev) => prev + 1)
@@ -59,11 +71,15 @@ export const Carousels = observer(function Carousels(props: CarouselProps) {
     }
   }
 
-  const renderItem = ({ item }: { item: { id: string; image: ImageSourcePropType } }) => (
-    <TouchableOpacity onPress={() => navigation.navigate("Wellness")} style={styles.imageContainer}>
-      <Image source={item.image} style={styles.image} />
-    </TouchableOpacity>
-  )
+  const renderItem = ({ item }: { item: { id: string; image: ImageSourcePropType, name: string, uuid: string } }) => {
+    
+    return(<TouchableOpacity onPress={()=> navigation.navigate("Wellness")} style={styles.imageContainer}>
+      <Image source={{uri: item.image}} style={styles.image} />
+      <Text style={{color: "#000"}} text={item.name} />
+    </TouchableOpacity>)
+}
+
+  
 
   return (
     <View style={styles.container}>
@@ -80,9 +96,9 @@ export const Carousels = observer(function Carousels(props: CarouselProps) {
       <View>
         <FlatList
           ref={flatListRef}
-          data={data}
+          data={categories?.data?.data?.data}
           renderItem={renderItem}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item.uuid}
           horizontal
           showsHorizontalScrollIndicator={false}
           pagingEnabled
@@ -186,126 +202,4 @@ const styles = StyleSheet.create({
   },
 })
 
-// the beginnning of a new line to test right below here
 
-// import * as React from "react"
-// import {
-//   StyleProp,
-//   TextStyle,
-//   View,
-//   ViewStyle,
-//   Dimensions,
-//   TouchableOpacity,
-//   StyleSheet,
-// } from "react-native"
-// import { observer } from "mobx-react-lite"
-// import { colors, typography } from "app/theme"
-// import { Text } from "app/components/Text"
-// import Carousel, { Pagination } from "react-native-snap-carousel"
-
-// export interface CarouselProps {
-//   /**
-//    * An optional style override useful for padding & margin.
-//    */
-//   // style?: StyleProp<ViewStyle>
-// }
-
-// /**
-//  * Describe your component here
-//  */
-// export const Carousels = observer(function Carousels(props: CarouselProps) {
-//   const { width: screenWidth } = Dimensions.get("window")
-//   const carouselRef = React.useRef<any>(null)
-
-//   const [activeIndex, setActiveIndex] = React.useState(0)
-//   const data = [
-//     { title: "Item 1", color: "#FF6347" },
-//     { title: "Item 2", color: "#1E90FF" },
-//     { title: "Item 3", color: "#32CD32" },
-//   ]
-
-//   const renderItem = ({ item }: { item: { title: string; color: string } }) => (
-//     <View style={[styles.itemContainer, { backgroundColor: item.color }]}>
-//       <Text style={styles.itemText}>{item.title}</Text>
-//     </View>
-//   )
-
-//   const slideToNext = () => {
-//     const nextIndex = (activeIndex + 1) % data.length // Go to the next slide, looping back to the first
-//     carouselRef.current?.snapToItem(nextIndex)
-//   }
-
-//   const slideToPrevious = () => {
-//     const prevIndex = (activeIndex - 1 + data.length) % data.length // Go to the previous slide, looping to the last
-//     carouselRef.current?.snapToItem(prevIndex)
-//   }
-
-//   return (
-//     <View style={styles.container}>
-//       <Carousel
-//         ref={carouselRef}
-//         data={data}
-//         renderItem={renderItem}
-//         sliderWidth={screenWidth}
-//         itemWidth={screenWidth / 3}
-//         inactiveSlideScale={1}
-//         inactiveSlideOpacity={1}
-//         loop={true}
-//         enableSnap={true}
-//         onSnapToItem={(index) => setActiveIndex(index)} // Update active index
-//         slideStyle={{ paddingHorizontal: 5 }}
-//       />
-//       <Pagination
-//         dotsLength={data.length}
-//         activeDotIndex={activeIndex}
-//         containerStyle={styles.paginationContainer}
-//         dotStyle={styles.activeDot}
-//         inactiveDotStyle={styles.inactiveDot}
-//         inactiveDotOpacity={0.4}
-//         inactiveDotScale={0.6}
-//       />
-//       <View style={styles.buttonContainer}>
-//         <TouchableOpacity style={styles.button} onPress={slideToPrevious}>
-//           <Text style={styles.buttonText}>Previous</Text>
-//         </TouchableOpacity>
-//         <TouchableOpacity style={styles.button} onPress={slideToNext}>
-//           <Text style={styles.buttonText}>Next</Text>
-//         </TouchableOpacity>
-//       </View>
-//     </View>
-//   )
-// })
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: "center",
-//     alignItems: "center",
-//   },
-//   itemContainer: {
-//     // width: screenWidth / 1.5,
-//     height: 150,
-//     justifyContent: "center",
-//     alignItems: "center",
-//     borderRadius: 10,
-//   },
-//   itemText: {
-//     fontSize: 16,
-//     color: "#FFF",
-//   },
-//   paginationContainer: {
-//     paddingVertical: 10,
-//   },
-//   activeDot: {
-//     width: 10,
-//     height: 10,
-//     borderRadius: 5,
-//     backgroundColor: "blue",
-//   },
-//   inactiveDot: {
-//     width: 8,
-//     height: 8,
-//     borderRadius: 4,
-//     backgroundColor: "gray",
-//   },
-// })

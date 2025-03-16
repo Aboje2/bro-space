@@ -9,86 +9,87 @@ export const HomeScreen: FC<DemoTabScreenProps<"Home">> = function HomeScreen(_p
   const { navigation } = _props
 
   return (
-    <Screen preset="scroll" contentContainerStyle={$container} safeAreaEdges={["top"]}>
-      <View style={[styles.textSpacing, styles.topContent]}>
-        <Icon icon="logo" />
-        <View style={[styles.spanWrapper, { gap: 20 }]}>
-          <Icon icon="message" />
-          <Icon icon="bell" />
-        </View>
-      </View>
-
-      <View style={[styles.bannerStyle, styles.contentPadding]}>
-        <View style={styles.welcomeTextContainer}>
-          <Text weight="light" style={styles.homeTextStyle} text="Welcome to" />
-          <View style={styles.spanWrapper}>
-            <Text weight="light" style={styles.spanText} text="BroSpace." />
-            <Text weight="semiBold" style={styles.homeTextStyle} text="community hub." />
+    <View style={{ flex: 1 }}>
+      <Screen preset="scroll" contentContainerStyle={$container} safeAreaEdges={["top"]}>
+        <View style={[styles.textSpacing, styles.topContent]}>
+          <Icon icon="logo" />
+          <View style={[styles.spanWrapper, { gap: 20 }]}>
+            <Icon icon="message" />
+            <Icon icon="bell" />
           </View>
         </View>
 
-        <Text
-          weight="normal"
-          size="xxs"
-          style={{ color: colors.palette.neutral100 }}
-          text="Real Conversations, Real Connections—A Safe Space to Share, Vent, and Solve Life’s Challenges with people Who Understand."
-        />
-      </View>
-      <View style={[styles.textSpacing, styles.contentPadding]}>
-        <TouchableOpacity onPress={() => navigation.navigate("Category")}>
-          <Text weight="semiBold" size="sm" style={styles.textColor} text="Categories" />
-        </TouchableOpacity>
-        <Text weight="sansMd" size="xs" style={styles.accentColor} text="See all" />
-      </View>
+        <View style={[styles.bannerStyle, styles.contentPadding]}>
+          <View style={styles.welcomeTextContainer}>
+            <Text weight="light" style={styles.homeTextStyle} text="Welcome to" />
+            <View style={styles.spanWrapper}>
+              <Text weight="light" style={styles.spanText} text="BroSpace." />
+              <Text weight="semiBold" style={styles.homeTextStyle} text="community hub." />
+            </View>
+          </View>
 
-      <Carousels />
-
-      <View style={[styles.recentPost, styles.contentPadding]}>
-        <Text
-          weight="semiBold"
-          size="sm"
-          style={[styles.textColor, styles.posts]}
-          text="Recent posts"
-        />
-
-        <View style={styles.postBottomSpacing}>
-          <Interest images />
+          <Text
+            weight="normal"
+            size="xxs"
+            style={{ color: colors.palette.neutral100 }}
+            text="Real Conversations, Real Connections—A Safe Space to Share, Vent, and Solve Life’s Challenges with people Who Understand."
+          />
         </View>
-        <Interest />
-
-        <View style={styles.iconContainer}>
-          <Icon onPress={() => navigation.navigate("Ananymous")} size={80} icon="addNew" />
+        <View style={[styles.textSpacing, styles.contentPadding]}>
+          <TouchableOpacity onPress={() => navigation.navigate("Category", { catId: "" })}>
+            <Text weight="semiBold" size="sm" style={styles.textColor} text="Categories" />
+          </TouchableOpacity>
+          <Text weight="sansMd" size="xs" style={styles.accentColor} text="See all" />
         </View>
 
-        <Button
-          preset="primary"
-          textStyle={{ color: colors.palette.neutral100 }}
-          style={styles.buttonStyle}
-          text="See all posts"
-          onPress={() => navigation.navigate("Ananymous")}
-        />
-      </View>
+        <Carousels />
 
-      <View style={styles.bottomContent}>
-        <Text
-          weight="semiBold"
-          size="sm"
-          style={[styles.textColor, styles.posts]}
-          text="Trending posts"
-        />
-        <View style={styles.postBottomSpacing}>
+        <View style={[styles.recentPost, styles.contentPadding]}>
+          <Text
+            weight="semiBold"
+            size="sm"
+            style={[styles.textColor, styles.posts]}
+            text="Recent posts"
+          />
+
+          <View style={styles.postBottomSpacing}>
+            <Interest images />
+          </View>
+          <Interest />
+
+          <Button
+            preset="primary"
+            textStyle={{ color: colors.palette.neutral100 }}
+            style={styles.buttonStyle}
+            text="See all posts"
+            onPress={() => navigation.navigate("Ananymous")}
+          />
+        </View>
+
+        <View style={styles.bottomContent}>
+          <Text
+            weight="semiBold"
+            size="sm"
+            style={[styles.textColor, styles.posts]}
+            text="Trending posts"
+          />
+          <View style={styles.postBottomSpacing}>
+            <Post />
+          </View>
+
           <Post />
+          <Button
+            preset="primary"
+            textStyle={{ color: colors.palette.neutral100 }}
+            style={styles.buttonStyle}
+            text="See all posts"
+          />
         </View>
-
-        <Post />
-        <Button
-          preset="primary"
-          textStyle={{ color: colors.palette.neutral100 }}
-          style={styles.buttonStyle}
-          text="See all posts"
-        />
+      </Screen>
+      <View style={styles.iconContainer}>
+        <Icon onPress={() => navigation.navigate("Ananymous")} size={100} icon="addNew" />
       </View>
-    </Screen>
+    </View>
   )
 }
 
@@ -160,8 +161,9 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     position: "absolute",
-    top: "1%",
-    right: 20,
+    // top: "1%",
+    right: 10,
+    top: 470,
     transform: [{ translateY: -25 }],
     zIndex: 10,
   },

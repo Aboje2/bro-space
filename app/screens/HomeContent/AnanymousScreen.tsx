@@ -1,4 +1,4 @@
-import React, { FC } from "react"
+import React, { FC, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { ViewStyle, View, StyleSheet, TouchableOpacity, Alert, Image } from "react-native"
 import { AppStackScreenProps } from "app/navigators"
@@ -8,7 +8,7 @@ import { useNavigation } from "@react-navigation/native"
 import * as DocumentPicker from "expo-document-picker"
 import useRecorder from "../../hooks/recording"
 
-// import { useStores } from "app/models"
+import { useStores } from "app/models"
 
 interface AnanymousScreenProps extends AppStackScreenProps<"Ananymous"> {}
 
@@ -19,7 +19,11 @@ export const AnanymousScreen: FC<AnanymousScreenProps> = observer(function Anany
   const { startRecording, stopRecording, recording, recordingDuration } = useRecorder()
 
   // Pull in one of our MST stores
-  // const { someStore, anotherStore } = useStores()
+  const {
+      BroItems: {
+       setCategory
+      },
+    } = useStores()
 
   // Pull in navigation via hook
 

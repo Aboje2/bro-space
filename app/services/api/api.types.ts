@@ -77,3 +77,13 @@ export interface accountResponse {
     access: string
   }
 }
+
+export interface BroCatList {
+  uuid: string
+  updated_at: Date
+  created_at: Date
+  name: string
+  image: string
+  description: string
+}
+;[]

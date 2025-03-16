@@ -1,11 +1,10 @@
 export const ENDPOINTS = {
   BASE_URL: __DEV__ ? "https://korededavid.pythonanywhere.com/" : "",
 
-  AUTH_REFRESH_TOKEN: "https://korededavid.pythonanywhere.com/auth/users/",
-
   // USERS ENDPOINTS
   LOGIN: "auth/jwt/create/",
   CREATE_USER: "auth/users/",
+  AUTH_REFRESH_TOKEN: "auth/jwt/refresh",
   // CREATE_USER: "users/create-account",
   GET_USER: "auth/users/",
   // ENDPOINTS FOR SPACE
@@ -21,6 +20,10 @@ export const ENDPOINTS = {
   ACCEPT_CONNECTION_REQUEST: (connectId: string) => `connections/accept/${connectId}`,
   DECLINE_CONNECTION_REQUEST: (connectId: string) => `connections/decline/${connectId}`,
   GET_LIST_FRIENDS: "connections/friends",
+}
+
+export const NAMESPACE = {
+  GET_LIST_CATEGORY: "space/categories",
 }
 
 export const BROSPACE = {

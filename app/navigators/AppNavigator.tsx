@@ -49,7 +49,7 @@ export type AppStackParamList = {
   ResetPasswordCode: undefined
   ResetPassword: undefined
   Ananymous: undefined
-  Category: undefined
+  Category: {catId: string}
   ChatPage: undefined
   Connections: undefined
   Wellness: undefined

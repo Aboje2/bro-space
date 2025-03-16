@@ -10,7 +10,7 @@ export async function loadString(key: string): Promise<string | null> {
     const data = await AsyncStorage.getItem(key)
 
     if (!data) return null
-    console.log(data, "getting data from load string")
+  
     return data
   } catch {
     // not sure why this would fail... even reading the RN docs I'm unclear

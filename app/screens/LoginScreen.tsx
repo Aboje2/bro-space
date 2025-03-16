@@ -78,7 +78,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
     // formData.append("password", authPassword)
 
     const loginData = { email: authEmail, password: authPassword }
-    console.log(authToken)
+
     createLogin
       .mutateAsync(loginData)
       .then((res) => {
@@ -104,6 +104,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
       })
 
     if (validationError) return
+    // setAuthToken(String(Date.now()))
 
     // Make a request to your server to get an authentication token.
     // If successful, reset the fields and set the token.
@@ -200,6 +201,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
           textStyle={styles.btnText}
           preset="primary"
           onPress={login}
+          isLoading={createLogin.isPending}
         />
 
         <View style={[styles.broTextWrapper, { gap: 5 }]}>

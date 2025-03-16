@@ -90,7 +90,6 @@ export const CreateAccountScreen: FC<CreateAccountScreenProps> = observer(
 
     const createAccount = () => {
       const data = { ...loginData, email: authEmail, gender: genderState, location: locationState }
-      console.log(data)
 
       accountCreated
         .mutateAsync(data)
@@ -212,6 +211,7 @@ export const CreateAccountScreen: FC<CreateAccountScreenProps> = observer(
         <View style={styles.endContent}>
           <Button
             onPress={createAccount}
+            isLoading={accountCreated.isPending}
             preset="primary"
             textStyle={{ color: colors.palette.neutral100 }}
             text="Create account"
