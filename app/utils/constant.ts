@@ -5,13 +5,19 @@ export const ENDPOINTS = {
   LOGIN: "auth/jwt/create/",
   CREATE_USER: "auth/users/",
   AUTH_REFRESH_TOKEN: "auth/jwt/refresh",
-  // CREATE_USER: "users/create-account",
   GET_USER: "auth/users/",
-  // ENDPOINTS FOR SPACE
-  CREATE_POST: "space/post/",
-  GET_POST: (postId: string) => `space/post/${postId}`,
+  // ENDPOINTS FOR SPACE/CATEGORIES
+  CREATE_POST: "space/posts/",
+  GET_POST: (uuid: string) => `space/posts/${uuid}`,
+
   GET_LIST_POST: (pageNumber: number) => `space/posts?page=${pageNumber}`,
-  GET_LIST_CATEGORY: "space/categories",
+  //CATEGORIES ENDPOINTS
+  GET_LIST_CATEGORIES: "space/categories",
+  GET_CATEGORY_POST: (cat_uuid: string, post_uuid: string) =>
+    `space/categories/${cat_uuid}/posts/${post_uuid}/`,
+  GET_LIST_CATEGORY: (catId: string) => `/space/categories/${catId}/posts/`,
+  CREATE_CATEGORY_POST: "space/categories/posts/",
+
   // FEEDS ENDPOINTS
   GET_LIST_FEED: (pageNumber: number) => `feed/?page=${pageNumber}`,
   // CONNECTIONS ENDPOINTS
@@ -20,10 +26,28 @@ export const ENDPOINTS = {
   ACCEPT_CONNECTION_REQUEST: (connectId: string) => `connections/accept/${connectId}`,
   DECLINE_CONNECTION_REQUEST: (connectId: string) => `connections/decline/${connectId}`,
   GET_LIST_FRIENDS: "connections/friends",
+  //FORUM
+  GET_LIST_FORUM: "networking/forums/",
+  CREATE_FORUM: "networking/forums/",
+  JOIN_FORUM: "networking/forums/join/",
+  CREATE_FORUM_POST: (forumId: string) => `networking/forums/${forumId}/posts/`,
+  GET_FORUM_POST: (forumId: string) => `networking/forums/${forumId}/posts/`,
+  GET_SINGLE_FORUM_POST: (forumId: string, forumPostId: string) =>
+    `networking/forums/${forumId}/posts/${forumPostId}/`,
 }
 
 export const NAMESPACE = {
-  GET_LIST_CATEGORY: "space/categories",
+  GET_LIST_CATEGORIES: " GET_LIST_CATEGORIES",
+  GET_LIST_CATEGORY: " GET_LIST_CATEGORY",
+  GET_USER: "GET_USER",
+  GET_POST: "GET_POST",
+  GET_LIST_POST: "GET_LIST_POST",
+  GET_LIST_FEED: "GET_LIST_FEED",
+  GET_LIST_FRIENDS: "GET_LIST_FRIENDS",
+  GET_CATEGORY_POST: "GET_CATEGORY_POST",
+  GET_LIST_FORUM: "GET_LIST_FORUM",
+  GET_FORUM_POST: " GET_FORUM_POST",
+  GET_SINGLE_FORUM_POST: "GET_SINGLE_FORUM_POST",
 }
 
 export const BROSPACE = {

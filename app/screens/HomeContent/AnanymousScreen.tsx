@@ -4,26 +4,39 @@ import { ViewStyle, View, StyleSheet, TouchableOpacity, Alert, Image } from "rea
 import { AppStackScreenProps } from "app/navigators"
 import { Screen, Text, Icon, TextField, Toggle, Button } from "app/components"
 import { colors, spacing } from "app/theme"
+import useCreatePost from "app/hooks/space/use-createPost"
 import { useNavigation } from "@react-navigation/native"
 import * as DocumentPicker from "expo-document-picker"
 import useRecorder from "../../hooks/recording"
+import { useRoute } from "@react-navigation/native"
+import useCreateCategoryPost from "app/hooks/category/use-create-categoryPost"
 
-import { useStores } from "app/models"
+// import { useStores } from "app/models"
 
 interface AnanymousScreenProps extends AppStackScreenProps<"Ananymous"> {}
+type RouteParams = {
+  catId?: string // Or number, depending on your data
+}
 
 export const AnanymousScreen: FC<AnanymousScreenProps> = observer(function AnanymousScreen(_props) {
   const [toggler, setToggler] = React.useState(false)
   const [images, setImages] = React.useState<string[]>([])
+  const [topic, setTopic] = React.useState<string>("")
+  const [post, setPost] = React.useState<string>("")
+  const route = useRoute()
+  const { catId } = route.params as RouteParams
   const { navigation } = _props
-  const { startRecording, stopRecording, recording, recordingDuration } = useRecorder()
+  const { startRecording, stopRecording, recording, recordingDuration, recordingUri } =
+    useRecorder()
+  const createPost = useCreatePost()
+  const createCategoryPost = useCreateCategoryPost()
 
   // Pull in one of our MST stores
-  const {
-      BroItems: {
-       setCategory
-      },
-    } = useStores()
+  // const {
+  //     BroItems: {
+  //      setCategory
+  //     },
+  //   } = useStores()
 
   // Pull in navigation via hook
 
@@ -58,6 +71,67 @@ export const AnanymousScreen: FC<AnanymousScreenProps> = observer(function Anany
     setImages(updatedImages)
   }
 
+  const handleCreatePost = () => {
+    const formData = new FormData()
+    const uuid = "87be6a63-48e9-4daa-908b-4c578185a3fa"
+    formData.append("category_uuid", uuid)
+    formData.append("text", post)
+    formData.append("topic", topic)
+    // formData.append("allow_connections", toggler ? "true" : "false")
+    // formData.append("upload_media", recording)
+    // images.forEach((img)=>{
+    //   formData.append("upload_media", img )
+    // })
+
+    images.forEach((imgUri, index) => {
+      const fileType = imgUri.split(".").pop() // Extracts file extension
+      const mimeType = fileType === "png" ? "image/png" : `image/${fileType}` // Assigns MIME type dynamically
+
+      formData.append("upload_media", {
+        uri: imgUri,
+        name: `image_${index}.${fileType}`,
+        type: mimeType,
+      } as unknown as Blob)
+    })
+
+    if (!recordingUri) {
+      // console.error("No recording available to send.")
+    } else {
+      const fileType = recordingUri.split(".").pop()
+      const mimeType = `audio/${fileType}`
+      formData.append("upload_media", {
+        uri: recordingUri,
+        name: `recording.${fileType}`,
+        type: mimeType,
+      } as unknown as Blob)
+    }
+
+    // 87be6a63-48e9-4daa-908b-4c578185a3fa
+    if (catId) {
+      formData.append("category_uuid", catId)
+      createCategoryPost
+        .mutateAsync(formData)
+        .then((response) => {
+          console.log(response?.data?.data, "double data")
+          console.log(response?.data, "just data")
+          // navigation.navigate("Connections")
+        })
+        .catch((error) => {
+          console.log(error?.response?.data || error?.message)
+        })
+    } else {
+      createPost
+        .mutateAsync(formData)
+        .then((response) => {
+          console.log(response)
+          // navigation.navigate("Connections")
+        })
+        .catch((error) => {
+          console.log(error?.response?.data || error?.message)
+        })
+    }
+  }
+
   return (
     <Screen
       preset="scroll"
@@ -79,8 +153,15 @@ export const AnanymousScreen: FC<AnanymousScreenProps> = observer(function Anany
           text="Let’s talk about personal development. You can tell us what you have in mind now."
         />
 
-        <TextField inputWrapperStyle={styles.textFieldStyle} placeholder="Topic" />
         <TextField
+          value={topic}
+          onChangeText={(text) => setTopic(text)}
+          inputWrapperStyle={styles.textFieldStyle}
+          placeholder="Topic"
+        />
+        <TextField
+          value={post}
+          onChangeText={(text) => setPost(text)}
           inputWrapperStyle={styles.selectStyle}
           placeholder="Bro to bro, what’s on your mind??"
         />
@@ -158,7 +239,8 @@ export const AnanymousScreen: FC<AnanymousScreenProps> = observer(function Anany
           preset="primary"
           textStyle={{ color: colors.palette.neutral100 }}
           text="Create post"
-          onPress={() => navigation.navigate("Connections")}
+          onPress={handleCreatePost}
+          isLoading={createPost.isPending || createCategoryPost.isPending}
         />
       </View>
     </Screen>

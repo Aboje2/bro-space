@@ -19,6 +19,7 @@ import {
   TextFieldAccessoryProps,
   Toggle,
   ToggleProps,
+  FailedModal,
 } from "../components"
 import { useStores } from "../models"
 import { AppStackScreenProps } from "../navigators"
@@ -42,6 +43,7 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   const [isAuthPasswordHidden, setIsAuthPasswordHidden] = useState(true)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [attemptsCount, setAttemptsCount] = useState(0)
+  const [openError, setOpenError] = useState<boolean>(false)
   const {
     authenticationStore: {
       authEmail,
@@ -69,20 +71,20 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
   }, [])
 
   const error = isSubmitted ? validationError : ""
-
+  let newError
   function login() {
     setIsSubmitted(true)
     setAttemptsCount(attemptsCount + 1)
-    // const formData = new FormData()
-    // formData.append("email", authEmail)
-    // formData.append("password", authPassword)
+
+    const formData = new FormData()
+    formData.append("email", authEmail)
+    formData.append("password", authPassword)
 
     const loginData = { email: authEmail, password: authPassword }
 
     createLogin
-      .mutateAsync(loginData)
+      .mutateAsync(formData)
       .then((res) => {
-        // setRefreshToken("")
         const accessToken =
           res?.data?.data &&
           typeof res.data.data === "object" &&
@@ -100,7 +102,8 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
         setAuthEmail("")
       })
       .catch((error) => {
-        console.log(error?.response?.data || error?.message)
+        console.log(error?.response?.data.message)
+        setOpenError(true)
       })
 
     if (validationError) return
@@ -216,6 +219,11 @@ export const LoginScreen: FC<LoginScreenProps> = observer(function LoginScreen(_
           </TouchableOpacity>
         </View>
       </View>
+      <FailedModal
+        openFailed={openError}
+        setOpenFailed={setOpenError}
+        text="No active account found with the given credentials"
+      />
     </Screen>
   )
 })

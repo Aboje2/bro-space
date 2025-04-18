@@ -48,18 +48,24 @@ export type AppStackParamList = {
   CreatePassword: undefined
   ResetPasswordCode: undefined
   ResetPassword: undefined
-  Ananymous: undefined
-  Category: {catId: string}
+  Ananymous: { catId?: string }
+  Category: undefined
   ChatPage: undefined
   Connections: undefined
-  Wellness: undefined
-  PostDetail: undefined
+  Wellness: { catId: string }
+  PostDetail: { postId: string }
   Networking: undefined
   CreateEvents: undefined
   Events: undefined
   Hangouts: undefined
   Tickets: undefined
   Preview: undefined
+  CreateForum: { forumId?: string }
+  Notification: undefined
+  ForumPost: { forumId: string }
+  ForumPostDetail: { forumId: string; forumPostId: string }
+  CategoryPostDetail: { catId: string; catPostId: string }
+  CreateForumPost: { forumId: string | undefined }
 
   // 🔥 Your screens go here
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
@@ -87,11 +93,16 @@ const AppStack = observer(function AppStack() {
     authenticationStore: { isAuthenticated },
   } = useStores()
 
+  const {
+    BroItems: { hasOnBoarded },
+  } = useStores()
+
   // @demo remove-block-end
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
-      initialRouteName={isAuthenticated ? "Welcome" : "Login"} // @demo remove-current-line
+      // initialRouteName={isAuthenticated ? "Welcome" : "Login"} // @demo remove-current-line
+      initialRouteName={hasOnBoarded ? "Welcome" : "Login"} // @demo remove-current-line
     >
       {/* @demo remove-block-start */}
       {isAuthenticated ? (
@@ -107,22 +118,29 @@ const AppStack = observer(function AppStack() {
           <Stack.Screen name="PostDetail" component={Screens.PostDetailScreen} />
           <Stack.Screen name="Category" component={Screens.CategoryScreen} />
           <Stack.Screen name="Networking" component={Screens.NetworkingScreen} />
+          <Stack.Screen name="CreateForum" component={Screens.CreateForumScreen} />
           <Stack.Screen name="CreateEvents" component={Screens.CreateEventsScreen} />
           <Stack.Screen name="Events" component={Screens.EventsScreen} />
           <Stack.Screen name="Hangouts" component={Screens.HangoutsScreen} />
           <Stack.Screen name="Tickets" component={Screens.TicketsScreen} />
           <Stack.Screen name="Preview" component={Screens.PreviewScreen} />
+          <Stack.Screen name="ForumPost" component={Screens.ForumPostScreen} />
+          <Stack.Screen name="ForumPostDetail" component={Screens.ForumPostDetailScreen} />
+          <Stack.Screen name="CategoryPostDetail" component={Screens.CategoryPostDetailScreen} />
+          <Stack.Screen name="CreateForumPost" component={Screens.CreateForumPostScreen} />
+
+          <Stack.Screen name="Notification" component={Screens.NotificationScreen} />
         </>
       ) : (
         <>
-          <Stack.Screen name="Splash" component={Screens.SplashScreen} />
-
-          <Stack.Screen name="CreateAccount" component={Screens.CreateAccountScreen} />
-
-          <Stack.Screen name="CreatePassword" component={Screens.CreatePasswordScreen} />
-          <Stack.Screen name="ResetPasswordCode" component={Screens.ResetPasswordCodeScreen} />
-          <Stack.Screen name="ResetPassword" component={Screens.ResetPasswordScreen} />
-          <Stack.Screen name="Login" component={Screens.LoginScreen} />
+          <>
+            <Stack.Screen name="CreateAccount" component={Screens.CreateAccountScreen} />
+            <Stack.Screen name="Splash" component={Screens.SplashScreen} />
+            <Stack.Screen name="CreatePassword" component={Screens.CreatePasswordScreen} />
+            <Stack.Screen name="ResetPasswordCode" component={Screens.ResetPasswordCodeScreen} />
+            <Stack.Screen name="ResetPassword" component={Screens.ResetPasswordScreen} />
+            <Stack.Screen name="Login" component={Screens.LoginScreen} />
+          </>
         </>
       )}
       {/* @demo remove-block-end */}

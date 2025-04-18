@@ -14,7 +14,7 @@ import { Text, Icon } from "app/components"
 import { useStores } from "app/models"
 import { useNavigation } from "@react-navigation/native"
 import { AppNavigationProp } from "app/navigators/AppNavigator"
-import useGetCategories from "app/hooks/category/get-category"
+import useGetCategories from "app/hooks/category/get-categories"
 import Carousel, { Pagination } from "react-native-snap-carousel"
 const fourthSlide = require("../../assets/images/slider4.png")
 const firstSlide = require("../../assets/images/slider1.png")
@@ -42,21 +42,18 @@ const datas = [
 const screenWidth = Dimensions.get("window").width
 const ITEMS_PER_PAGE = 3
 
-
 export const Carousels = observer(function Carousels(props: CarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const flatListRef = useRef<FlatList>(null)
   const categories = useGetCategories()
-  const data = categories?.data?.data?.data || []
+  const data = categories?.value?.data || []
+  // console.log(data[0].uuid, "carousel data in carousel component")
+
   // console.log("people that have what is to say", categories?.data?.data?.data[0], "the data in carousel")
   const navigation = useNavigation<AppNavigationProp>()
-  
-const totalPages = Math.ceil( data.length / ITEMS_PER_PAGE)
-  
-  
- 
 
-  
+  const totalPages = Math.ceil(data.length / ITEMS_PER_PAGE)
+
   const handleNext = () => {
     if (currentIndex < totalPages - 1) {
       setCurrentIndex((prev) => prev + 1)
@@ -71,15 +68,17 @@ const totalPages = Math.ceil( data.length / ITEMS_PER_PAGE)
     }
   }
 
-  const renderItem = ({ item }: { item: { id: string; image: ImageSourcePropType, name: string, uuid: string } }) => {
-    
-    return(<TouchableOpacity onPress={()=> navigation.navigate("Wellness")} style={styles.imageContainer}>
-      <Image source={{uri: item.image}} style={styles.image} />
-      <Text style={{color: "#000"}} text={item.name} />
-    </TouchableOpacity>)
-}
-
-  
+  const renderItem = ({ item }: { item: { image: string; name: string; uuid: string } }) => {
+    return (
+      <TouchableOpacity
+        onPress={() => navigation.navigate("Wellness", { catId: item.uuid })}
+        style={styles.imageContainer}
+      >
+        <Image source={{ uri: item.image }} style={styles.image} />
+        <Text style={{ color: "#000" }} text={item.name} />
+      </TouchableOpacity>
+    )
+  }
 
   return (
     <View style={styles.container}>
@@ -201,5 +200,3 @@ const styles = StyleSheet.create({
     color: "#CCCCCC",
   },
 })
-
-

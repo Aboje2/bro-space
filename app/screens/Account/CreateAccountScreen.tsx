@@ -45,7 +45,9 @@ export const CreateAccountScreen: FC<CreateAccountScreenProps> = observer(
         validationError,
       },
     } = useStores()
-
+    const {
+      BroItems: { setHasOnBoarded },
+    } = useStores()
     const accountCreated = useCreateAccount()
     // Pull in navigation via hook
 
@@ -96,11 +98,12 @@ export const CreateAccountScreen: FC<CreateAccountScreenProps> = observer(
         .then((result) => {
           const accessToken = result?.data?.data?.tokens?.access
           if (accessToken) {
-            console.log(accessToken, "Access Token")
+            // console.log(accessToken, "Access Token")
             setAuthToken(accessToken)
             saveString(BROSPACE.USER, accessToken)
             saveString(BROSPACE.REFRESH_TOKEN, result?.data?.data?.tokens?.refresh)
             setRefreshToken(result?.data?.data?.tokens.access as string)
+            setHasOnBoarded(true)
           }
         })
         .catch((err) => {

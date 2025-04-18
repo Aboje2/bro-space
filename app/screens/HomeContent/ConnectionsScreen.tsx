@@ -6,6 +6,7 @@ import { Screen, Text, Icon } from "app/components"
 import { colors, spacing } from "app/theme"
 const profile = require("../../../assets/images/profilePics.png")
 import { useNavigation } from "@react-navigation/native"
+import { AppNavigationProp } from "app/navigators"
 // import { useStores } from "app/models"
 
 interface ConnectionsScreenProps extends AppStackScreenProps<"Connections"> {}
@@ -28,7 +29,7 @@ export const ConnectionsScreen: FC<ConnectionsScreenProps> = observer(function C
   // const { someStore, anotherStore } = useStores()
 
   // Pull in navigation via hook
-  const navigation = useNavigation()
+  const navigation = useNavigation<AppNavigationProp>()
   return (
     <Screen
       preset="scroll"

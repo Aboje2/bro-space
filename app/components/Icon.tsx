@@ -135,6 +135,11 @@ export const iconRegistry = {
   calendar: require("../../assets/icons/calendar.png"),
   clock: require("../../assets/icons/clock.png"),
   addNew: require("../../assets/icons/add-icon.png"),
+  not_menu: require("../../assets/icons/more-menu.png"),
+  mouse: require("../../assets/icons/mouse.png"),
+  dislike: require("../../assets/icons/dislike.png"),
+  empty: require("../../assets/icons/empty.png"),
+  pinned: require("../../assets/icons/pin.png"),
 }
 
 const $imageStyleBase: ImageStyle = {

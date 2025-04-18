@@ -10,6 +10,7 @@ export interface SelectInputProps {
   value: string
   setValue: React.Dispatch<React.SetStateAction<string>>
   title: string
+  bgColor?: boolean
   /**
    * An optional style override useful for padding & margin.
    */
@@ -23,11 +24,15 @@ export const SelectInput = observer(function SelectInput({
   value,
   setValue,
   title,
+  bgColor,
 }: SelectInputProps) {
   return (
     <View style={[styles.container]}>
       <Dropdown
-        style={styles.dropdown}
+        style={[
+          styles.dropdown,
+          { backgroundColor: bgColor ? "#6600330D" : "", borderWidth: bgColor ? 0 : 1 },
+        ]}
         placeholderStyle={styles.placeholderStyle}
         selectedTextStyle={styles.selectedTextStyle}
         inputSearchStyle={styles.inputSearchStyle}
@@ -62,7 +67,8 @@ const styles = StyleSheet.create({
     height: 45,
     paddingHorizontal: 10,
     borderColor: colors.palette.neutral400,
-    borderWidth: 1,
+
+    // borderWidth: 1,
     borderRadius: 4,
   },
 

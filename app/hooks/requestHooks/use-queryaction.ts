@@ -47,7 +47,7 @@ function useQueryActionHook<T>(
 
   return {
     ...queryResult,
-    value: queryResult.data?.data?.data,
+    value: queryResult.data?.data,
   }
 }
 

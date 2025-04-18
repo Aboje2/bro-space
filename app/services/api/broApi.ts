@@ -24,31 +24,41 @@ axios.interceptors.response.use(
     return response
   },
   async function (error) {
+    console.log(error?.response?.data, "middleware middleware middlewaremiddleware middleware")
+
     const baseURL = ENDPOINTS.BASE_URL
     const originalRequest = error.config
 
     const refresh = await loadString(BROSPACE.REFRESH_TOKEN)
     let retryNum = 0
+
     if (
       error?.response?.status === 401 &&
-      (error?.response?.data?.message === "Authentication credentials were not provided." ||
+      (error?.response?.data?.message === "Token is invalid or expired" ||
         error?.response?.data?.message === "Given token not valid for any token type") &&
       refresh
     ) {
       retryNum++
+      console.log(refresh)
       return axios
         .post(baseURL + ENDPOINTS.AUTH_REFRESH_TOKEN, {
           refresh,
         })
-        .then((res) => {
+        .then((res: any) => {
+          console.log("we made it to the then method")
+          // console.log(res.data, "response response response response response response")
           if (res.status === 200 || res.status === 201) {
+            console.log("we made it into this function")
+            // console.log(res)
             saveString(BROSPACE.USER, res?.data?.data?.access)
+
             axios.defaults.headers.common["Authorization"] = "Bearer " + res?.data?.data?.access
             return axios(originalRequest)
           }
         })
         .catch((err) => {
-          console.log(err)
+          console.log("we are also in the error method")
+          console.log(err?.response.data, "we are catching the error here in the catch method")
           window.location.replace("/login")
         })
     }
@@ -66,9 +76,8 @@ export const secureRequest = async ({
 
   // const headers = { ...requestHeader }
   const headers = {
-    Accept: "application/json;charset=utf-8",
-    "Content-Type": "application/json;charset=utf-8",
     ...requestHeader,
+    "Content-Type": "multipart/form-data",
   }
 
   // const isFormData = body instanceof FormData

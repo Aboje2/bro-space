@@ -1,14 +1,28 @@
 import React, { FC } from "react"
 import { observer } from "mobx-react-lite"
-import { ViewStyle, View, TouchableOpacity, StyleSheet } from "react-native"
+import {
+  ViewStyle,
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  Share,
+  Pressable,
+  ActivityIndicator,
+} from "react-native"
 import { AppStackScreenProps } from "app/navigators"
-import { Screen, Text, Icon } from "app/components"
-import { useNavigation } from "@react-navigation/native"
+import { useRoute } from "@react-navigation/native"
+import { Screen, Text, Icon, IfElse, DetailLoader } from "app/components"
+import { formatDistanceToNow } from "date-fns"
 import { colors, spacing } from "app/theme"
+import useGetPost from "app/hooks/space/use-getPost"
+import useCreateConnection from "app/hooks/connections/use-creatConnection"
 // import { useStores } from "app/models"
 
 interface PostDetailScreenProps extends AppStackScreenProps<"PostDetail"> {}
-
+type RouteParams = {
+  postId?: string // Or number, depending on your data
+  // catId?: string | null
+}
 export const PostDetailScreen: FC<PostDetailScreenProps> = observer(function PostDetailScreen(
   _props,
 ) {
@@ -16,13 +30,58 @@ export const PostDetailScreen: FC<PostDetailScreenProps> = observer(function Pos
   // const { someStore, anotherStore } = useStores()
 
   // Pull in navigation via hook
+  const createConnection = useCreateConnection()
   const { navigation } = _props
+
+  const route = useRoute()
+  const { postId } = (route.params as RouteParams) || {}
+  const postDetail = useGetPost(postId!)
+  // console.log(postDetail, "logging from post detail page")
+  // const initial = postDetail?.value?.user.username.slice(0, 2).toUpperCase()
+  const initial = postDetail?.value?.data?.user.username
+  const formatTime = (dateString: Date) => {
+    if (!dateString) return
+    return formatDistanceToNow(new Date(dateString), { addSuffix: true })
+  }
+
+  const submitConnection = () => {
+    createConnection
+      .mutateAsync({ receiver_uuid: "need userId" })
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((error) => {
+        error?.response?.data || error.message
+      })
+  }
+
+  const onShare = async () => {
+    try {
+      const result = await Share.share({
+        message: "Check out this awesome app! 🚀 Download it here: https://example.com",
+      })
+
+      if (result.action === Share.sharedAction) {
+        console.log("Content shared successfully")
+      } else if (result.action === Share.dismissedAction) {
+        console.log("Share dismissed")
+      }
+    } catch (error) {
+      console.error("Error sharing:", error)
+    }
+  }
+
   return (
     <Screen
       preset="scroll"
       safeAreaEdges={["top", "bottom"]}
       contentContainerStyle={$screenContentContainer}
     >
+      <IfElse
+        ifOn={!!postDetail.isPending && !!postDetail?.value}
+        ifOnElse={!postDetail.isPending && !postDetail?.value}
+        onElse={<DetailLoader />}
+      ></IfElse>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconContent}>
         <View style={styles.iconWrapper}>
           <Icon icon="backward" />
@@ -33,73 +92,81 @@ export const PostDetailScreen: FC<PostDetailScreenProps> = observer(function Pos
       <View style={styles.mainContentContainer}>
         <View style={styles.topSpacing}>
           <View style={styles.initialsWrapper}>
-            <Text weight="sansMd" size="xs" style={styles.initials} text="AN" />
+            <Text weight="sansMd" size="xs" style={styles.initials} text={initial} />
           </View>
 
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Ananymous")}
-            style={styles.btnStyle}
-          >
-            <Text weight="normal" style={styles.privateConnect} text="Connect privately" />
-          </TouchableOpacity>
-        </View>
-
-        <Text weight="sansMd" size="xs" style={styles.accentColor} text="Anonymous user" />
-        <Text
-          weight="sansNormal"
-          size="xxs"
-          style={styles.timeText}
-          text={`2 hours ago . Wellness`}
-        />
-
-        <Text
-          weight="light"
-          size="sm"
-          style={[styles.primaryTextColor, { marginBottom: 10 }]}
-          text="Best meditation techniques"
-        />
-        <Text
-          weight="light"
-          size="xxs"
-          style={styles.textStyle}
-          text="Contrary to popular belief, Lorem Ipsum is not simply just a random text. It has roots in a piece of classical Latin 45 BC. Contrary to popular belief, Lorem Ipsum is not simply just a random text. It has roots in a piece of classical Latin 45 BC. Contrary to popular belief, Lorem Ipsum is not simply just a random text. It has roots in a piece of classical Latin 45 BC."
-        />
-
-        <View style={[styles.textIcon, { gap: 10, marginVertical: 10 }]}>
-          <View style={[styles.textIcon, styles.textSpacing]}>
-            <Icon size={16} icon="heart" />
-            <Text weight="normal" style={styles.reactionText} text={`215 likes`} />
-          </View>
-          <View style={[styles.textIcon, styles.textSpacing]}>
-            <Icon size={16} icon="message" />
-            <Text weight="normal" style={styles.reactionText} text={`70 comments`} />
-          </View>
-          <View style={[styles.textIcon, styles.textSpacing]}>
-            <Icon size={14} icon="share" />
-            <Text weight="normal" style={styles.reactionText} text="share" />
-          </View>
-        </View>
-
-        <Text
-          weight="sansNormal"
-          size="xs"
-          style={[styles.initials, { marginBottom: 10 }]}
-          text="Comments"
-        />
-        <Text
-          weight="normal"
-          size="xxs"
-          style={styles.commentText}
-          text="Contrary to belief, Lorem is a weird stuff."
-        />
-
-        <View style={[styles.textIcon, styles.textSpacing]}>
-          <Icon size={16} color="#CF3535" icon="redHeart" />
-          <View style={styles.textIcon}>
-            <Text weight="normal" style={styles.commentReaction} text={`5 likes`} />
-            <TouchableOpacity onPress={() => {}}>
-              <Text weight="normal" style={styles.commentReaction} text=" . Reply" />
+          {postDetail?.value?.data?.allow_connection && (
+            <TouchableOpacity onPress={submitConnection} style={styles.btnStyle}>
+              {createConnection.isPending ? (
+                <ActivityIndicator color="white" size="small" />
+              ) : (
+                <Text weight="normal" style={styles.privateConnect} text="Connect privately" />
+              )}
             </TouchableOpacity>
+          )}
+
+          <Text
+            weight="sansMd"
+            size="xs"
+            style={styles.accentColor}
+            text={postDetail?.value?.data?.user.username}
+          />
+          <Text
+            weight="sansNormal"
+            size="xxs"
+            style={styles.timeText}
+            text={`${formatTime(postDetail?.value?.data?.created_at)} . Wellness`}
+          />
+
+          <Text
+            weight="light"
+            size="sm"
+            style={[styles.primaryTextColor, { marginBottom: 10 }]}
+            text="Best meditation techniques"
+          />
+          <Text
+            weight="light"
+            size="xxs"
+            style={styles.textStyle}
+            text={postDetail?.value?.data?.text}
+          />
+
+          <View style={[styles.textIcon, { gap: 10, marginVertical: 10 }]}>
+            <View style={[styles.textIcon, styles.textSpacing]}>
+              <Icon size={20} icon="heart" />
+              <Text weight="normal" style={styles.reactionText} text={`215 likes`} />
+            </View>
+            <View style={[styles.textIcon, styles.textSpacing]}>
+              <Icon size={20} icon="message" />
+              <Text weight="normal" style={styles.reactionText} text={`70 comments`} />
+            </View>
+            <Pressable onPress={onShare} style={[styles.textIcon, styles.textSpacing]}>
+              <Icon size={18} icon="share" />
+              <Text weight="normal" style={styles.reactionText} text="share" />
+            </Pressable>
+          </View>
+
+          <Text
+            weight="sansNormal"
+            size="xs"
+            style={[styles.initials, { marginBottom: 10 }]}
+            text="Comments"
+          />
+          <Text
+            weight="normal"
+            size="xxs"
+            style={styles.commentText}
+            text="Contrary to belief, Lorem is a weird stuff."
+          />
+
+          <View style={[styles.textIcon, styles.textSpacing]}>
+            <Icon size={16} color="#CF3535" icon="redHeart" />
+            <View style={styles.textIcon}>
+              <Text weight="normal" style={styles.commentReaction} text={`5 likes`} />
+              <TouchableOpacity onPress={() => {}}>
+                <Text weight="normal" style={styles.commentReaction} text=" . Reply" />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </View>

@@ -1,10 +1,12 @@
 import { DemoTabScreenProps } from "../../navigators/DemoNavigator"
 import React, { FC, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { ViewStyle, View, TouchableOpacity, StyleSheet } from "react-native"
+import { ViewStyle, View, TouchableOpacity, StyleSheet, Image } from "react-native"
 import { AppStackScreenProps } from "app/navigators"
 import { Screen, Text, Icon, TextField, Button } from "app/components"
 import { colors, spacing } from "app/theme"
+const futbal = require("../../../assets/images/futbal.png")
+const dev = require("../../../assets/images/dev.png")
 import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
 
@@ -56,81 +58,87 @@ export const AdventureScreen: FC<AdventureScreenProps> = observer(function Adven
         </View>
 
         <View style={styles.cardStyle}>
-          <View style={styles.bigCycle}>
-            <View style={styles.smallCycle} />
-          </View>
-          <Text weight="semiBold" size="sm" style={styles.primaryColor} text="Football" />
-          <Text
-            weight="medium"
-            style={{ fontSize: 10, color: "#254863B2" }}
-            text=" Let's discuss football and everything associated with it 😎"
-          />
+          <Image style={styles.imageStyle} source={futbal} resizeMode="contain" />
+          <View>
+            {/* <View style={styles.bigCycle}>
+              <View style={styles.smallCycle} />
+            </View> */}
+            <Text weight="semiBold" size="sm" style={styles.primaryColor} text="Football" />
+            <Text
+              weight="medium"
+              style={{ fontSize: 10, color: "#254863B2" }}
+              text=" Let's discuss about football 😎"
+            />
 
-          <View style={styles.buttonsContainer}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Preview")}
-              style={styles.buttonStyle}
-            >
-              <Text weight="medium" style={styles.butttonText} text="Tech Fest 1.0" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Preview")}
-              style={styles.buttonStyle}
-            >
-              <Text weight="medium" style={styles.butttonText} text="Tech Fest 1.0" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Events")}
-              style={[styles.buttonStyle, { backgroundColor: "#6600331A" }]}
-            >
-              <Text
-                weight="medium"
-                style={[styles.butttonText, { color: "#660033" }]}
-                text="87 Events active"
-              />
-            </TouchableOpacity>
+            <View style={styles.buttonsContainer}>
+              {/* <TouchableOpacity
+                onPress={() => navigation.navigate("Preview")}
+                style={styles.buttonStyle}
+              >
+                <Text weight="medium" style={styles.butttonText} text="Tech Fest 1.0" />
+              </TouchableOpacity> */}
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Preview")}
+                style={styles.buttonStyle}
+              >
+                <Text weight="medium" style={styles.butttonText} text="Tech Fest 1.0" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Events")}
+                style={[styles.buttonStyle, { backgroundColor: "#6600331A" }]}
+              >
+                <Text
+                  weight="medium"
+                  style={[styles.butttonText, { color: "#660033" }]}
+                  text="87 Events active"
+                />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
         <View style={styles.cardStyle}>
-          <View style={styles.bigCycle}>
-            <View style={styles.smallCycle} />
-          </View>
-          <Text weight="semiBold" size="sm" style={styles.primaryColor} text="Football" />
-          <Text
-            weight="medium"
-            style={{ fontSize: 10, color: "#254863B2" }}
-            text=" Let's discuss football and everything associated with it 😎"
-          />
+          <Image style={styles.imageStyle} source={futbal} resizeMode="contain" />
+          <View>
+            {/* <View style={styles.bigCycle}>
+              <View style={styles.smallCycle} />
+            </View> */}
+            <Text weight="semiBold" size="sm" style={styles.primaryColor} text="Football" />
+            <Text
+              weight="medium"
+              style={{ fontSize: 10, color: "#254863B2" }}
+              text=" Let's discuss about football😎"
+            />
 
-          <View style={styles.buttonsContainer}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Preview")}
-              style={styles.buttonStyle}
-            >
-              <Text weight="medium" style={styles.butttonText} text="Tech Fest 1.0" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Preview")}
-              style={styles.buttonStyle}
-            >
-              <Text weight="medium" style={styles.butttonText} text="Tech Fest 1.0" />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Events")}
-              style={[styles.buttonStyle, { backgroundColor: "#6600331A" }]}
-            >
-              <Text
-                weight="medium"
-                style={[styles.butttonText, { color: "#660033" }]}
-                text="87 Events active"
-              />
-            </TouchableOpacity>
+            <View style={styles.buttonsContainer}>
+              {/* <TouchableOpacity
+                onPress={() => navigation.navigate("Preview")}
+                style={styles.buttonStyle}
+              >
+                <Text weight="medium" style={styles.butttonText} text="Tech Fest 1.0" />
+              </TouchableOpacity> */}
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Preview")}
+                style={styles.buttonStyle}
+              >
+                <Text weight="medium" style={styles.butttonText} text="Tech Fest 1.0" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Events")}
+                style={[styles.buttonStyle, { backgroundColor: "#6600331A" }]}
+              >
+                <Text
+                  weight="medium"
+                  style={[styles.butttonText, { color: "#660033" }]}
+                  text="87 Events active"
+                />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
         <View style={styles.cardStyle}>
-          <View style={styles.bigCycle}>
+          {/* <View style={styles.bigCycle}>
             <View style={styles.smallCycle} />
-          </View>
+          </View> */}
           <Text weight="semiBold" size="sm" style={styles.primaryColor} text="Football" />
           <Text
             weight="medium"
@@ -229,32 +237,40 @@ const styles = StyleSheet.create({
 
   cardStyle: {
     backgroundColor: colors.palette.neutral100,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     paddingVertical: 15,
     borderRadius: 8,
     position: "relative",
     overflow: "hidden",
     marginBottom: 10,
+    flexDirection: "row",
+    gap: 20,
   },
 
-  smallCycle: {
-    width: 20,
-    height: 20,
-    borderRadius: 50,
-    backgroundColor: colors.palette.primary50,
+  imageStyle: {
+    width: 98,
+    height: 80,
+    borderRadius: 6,
   },
 
-  bigCycle: {
-    width: 65,
-    height: 65,
-    borderRadius: 50,
-    backgroundColor: "#6600331A",
-    alignItems: "center",
-    justifyContent: "center",
-    position: "absolute",
-    top: -30,
-    right: -30,
-  },
+  // smallCycle: {
+  //   width: 20,
+  //   height: 20,
+  //   borderRadius: 50,
+  //   backgroundColor: colors.palette.primary50,
+  // },
+
+  // bigCycle: {
+  //   width: 65,
+  //   height: 65,
+  //   borderRadius: 50,
+  //   backgroundColor: "#6600331A",
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  //   position: "absolute",
+  //   top: -30,
+  //   right: -30,
+  // },
   iconStyle: { marginTop: 7, marginLeft: 10 },
   customBtn: {
     marginTop: 20,

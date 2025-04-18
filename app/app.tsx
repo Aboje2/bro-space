@@ -31,6 +31,7 @@ import Config from "./config"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { ViewStyle } from "react-native"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet"
 
 export const queryClient = new QueryClient()
 
@@ -107,11 +108,13 @@ function App(props: AppProps) {
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
         <ErrorBoundary catchErrors={Config.catchErrors}>
           <GestureHandlerRootView style={$container}>
-            <AppNavigator
-              linking={linking}
-              initialState={initialNavigationState}
-              onStateChange={onNavigationStateChange}
-            />
+            <BottomSheetModalProvider>
+              <AppNavigator
+                linking={linking}
+                initialState={initialNavigationState}
+                onStateChange={onNavigationStateChange}
+              />
+            </BottomSheetModalProvider>
           </GestureHandlerRootView>
         </ErrorBoundary>
       </SafeAreaProvider>

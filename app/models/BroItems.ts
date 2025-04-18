@@ -7,13 +7,13 @@ import { withSetPropAction } from "./helpers/withSetPropAction"
 export const BroItemsModel = types
   .model("BroItems")
   .props({
-    categoryId: "",
+    hasOnBoarded: false,
   })
-  
+
   .views((store) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
   .actions((store) => ({
-    setCategory(value: string) {
-      store.categoryId = value
+    setHasOnBoarded(value: boolean) {
+      store.hasOnBoarded = value
     },
   })) // eslint-disable-line @typescript-eslint/no-unused-vars
 

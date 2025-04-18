@@ -5,6 +5,7 @@ export default function useRecorder() {
   const [recording, setRecording] = useState<Audio.Recording | undefined>()
   const [recordingDuration, setRecordingDuration] = useState<number>(0)
   const [permissionResponse, requestPermission] = Audio.usePermissions()
+  const [recordingUri, setRecordingUri] = useState<string>()
 
   // Function to start recording
   async function startRecording(): Promise<void> {
@@ -49,6 +50,9 @@ export default function useRecorder() {
       })
 
       const uri = recording.getURI()
+      if (uri) {
+        setRecordingUri(uri)
+      }
       console.log("Recording stopped and stored at", uri)
     } catch (err) {
       console.error("Failed to stop recording:", err)
@@ -66,5 +70,6 @@ export default function useRecorder() {
     stopRecording,
     recording,
     recordingDuration,
+    recordingUri,
   }
 }

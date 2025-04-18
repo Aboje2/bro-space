@@ -5,7 +5,7 @@ import { spacing } from "../theme"
 import { Button, ButtonProps } from "./Button"
 import { Text, TextProps } from "./Text"
 
-const sadFace = require("../../assets/images/sad-face.png")
+const sadFace = require("../../assets/images/sad-faze.png")
 
 interface EmptyStateProps {
   /**
@@ -137,7 +137,7 @@ export function EmptyState(props: EmptyStateProps) {
     heading = preset.heading,
     headingTx,
     headingTxOptions,
-    imageSource = preset.imageSource,
+    imageSource = sadFace,
     style: $containerStyleOverride,
     buttonStyle: $buttonStyleOverride,
     buttonTextStyle: $buttonTextStyleOverride,
@@ -222,6 +222,6 @@ export function EmptyState(props: EmptyStateProps) {
   )
 }
 
-const $image: ImageStyle = { alignSelf: "center" }
+const $image: ImageStyle = { alignSelf: "center", width: 100, height: 100 }
 const $heading: TextStyle = { textAlign: "center", paddingHorizontal: spacing.lg }
 const $content: TextStyle = { textAlign: "center", paddingHorizontal: spacing.lg }

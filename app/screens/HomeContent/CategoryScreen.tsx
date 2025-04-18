@@ -2,9 +2,11 @@ import React, { FC } from "react"
 import { observer } from "mobx-react-lite"
 import { ViewStyle, TouchableOpacity, View, StyleSheet, Image } from "react-native"
 import { AppStackScreenProps } from "app/navigators"
-import { Screen, Text, Icon } from "app/components"
-import { useNavigation } from "@react-navigation/native"
+import { Screen, Text, Icon, IfElse } from "app/components"
+import { pulseAnimationStyle } from "app/utils/styles"
+
 import { colors, spacing } from "app/theme"
+import useGetCategories from "app/hooks/category/get-categories"
 
 const grid1 = require("../../../assets/images/slider1.png")
 const grid2 = require("../../../assets/images/slider2.png")
@@ -27,30 +29,49 @@ export const CategoryScreen: FC<CategoryScreenProps> = observer(function Categor
 
   // Pull in navigation via hook
   const { navigation } = _props
-  return (
-    <Screen
-      preset="scroll"
-      safeAreaEdges={["top", "bottom"]}
-      contentContainerStyle={$screenContentContainer}
-    >
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconContent}>
-        <View style={styles.iconWrapper}>
-          <Icon icon="backward" />
-        </View>
-        <Text weight="sansMd" size="md" style={styles.textColor} text="Categories" />
-      </TouchableOpacity>
+  const getCategory = useGetCategories()
 
-      <View style={styles.contentWrapper}>
-        {catImages.map((item) => (
-          <View key={item.title + 1}>
-            <TouchableOpacity onPress={() => navigation.navigate("Wellness")}>
-              <Image style={styles.imageStyle} source={item.img} />
-              {/* <Text weight="medium" text={item.title} /> */}
-            </TouchableOpacity>
+  console.log(getCategory?.value.data, "checking the outcome from category")
+  return (
+    <IfElse
+      ifOn={!getCategory.isPending && !!getCategory.value}
+      ifOnElse={getCategory.isPending && !getCategory.value}
+      onElse={
+        <View>
+          {Array.from({ length: 6 }).map((_, i) => (
+            <View key={i + "1123"} style={[styles.contentWrapper]}>
+              <View style={[styles.loaderStyle, pulseAnimationStyle]} />
+            </View>
+          ))}
+        </View>
+      }
+    >
+      <Screen
+        preset="scroll"
+        safeAreaEdges={["top", "bottom"]}
+        contentContainerStyle={$screenContentContainer}
+      >
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.iconContent}>
+          <View style={styles.iconWrapper}>
+            <Icon icon="backward" />
           </View>
-        ))}
-      </View>
-    </Screen>
+          <Text weight="sansMd" size="md" style={styles.textColor} text="Categories" />
+        </TouchableOpacity>
+
+        <View style={styles.contentWrapper}>
+          {getCategory?.value?.data.map((item) => (
+            <View key={item.uuid}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Wellness", { catId: item.uuid })}
+              >
+                <Image style={styles.imageStyle} source={{ uri: item.image }} />
+                {/* <Text weight="medium" text={item.title} /> */}
+              </TouchableOpacity>
+            </View>
+          ))}
+        </View>
+      </Screen>
+    </IfElse>
   )
 })
 const $screenContentContainer: ViewStyle = {
@@ -87,6 +108,14 @@ const styles = StyleSheet.create({
   },
   imageStyle: {
     width: 153.5,
+    height: 140,
     borderRadius: 8,
+  },
+
+  loaderStyle: {
+    width: 140,
+    height: 160,
+    borderRadius: 8,
+    backgroundColor: "#e0e0e0",
   },
 })

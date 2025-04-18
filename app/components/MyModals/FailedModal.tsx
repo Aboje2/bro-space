@@ -10,6 +10,7 @@ export interface FailedModalProps {
    */
   openFailed: boolean
   setOpenFailed: React.Dispatch<React.SetStateAction<boolean>>
+  text: string
 }
 
 /**
@@ -18,6 +19,7 @@ export interface FailedModalProps {
 export const FailedModal = observer(function FailedModal({
   openFailed,
   setOpenFailed,
+  text,
 }: FailedModalProps) {
   return (
     <Modals showModal={openFailed} setShowModal={() => setOpenFailed(false)}>
@@ -25,13 +27,13 @@ export const FailedModal = observer(function FailedModal({
         <Icon icon="info" />
       </View>
       <Text weight="sansMd" size="sm" style={styles.invalidText} text="Invalid email" />
-      <Text
-        weight="sansNormal"
-        size="xs"
-        style={styles.message}
-        text="Kindly provide the right email to access your account"
+      <Text weight="sansNormal" size="xs" style={styles.message} text={text} />
+      <Button
+        onPress={() => setOpenFailed(false)}
+        preset="primary"
+        textStyle={{ color: "#fff" }}
+        text="Continue"
       />
-      <Button preset="primary" textStyle={{ color: "#fff" }} text="Continue" />
     </Modals>
   )
 })

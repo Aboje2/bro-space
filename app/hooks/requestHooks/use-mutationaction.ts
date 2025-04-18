@@ -3,7 +3,7 @@ import { secureRequest } from "../../services/api/broApi"
 import { formatErrors } from "../../utils/component.utils"
 
 import { BroResponseType, SecureRequestProps, ResponseErrorType } from "../../services/api/"
-import { UseMutationOptions, useMutation } from "@tanstack/react-query"
+import { UseMutationOptions, useMutation, useQueryClient } from "@tanstack/react-query"
 // import useNotification from "./use-notification"
 
 const getMutationAction = (mutationData: any) => {
@@ -24,7 +24,7 @@ const getMutationAction = (mutationData: any) => {
   }
 }
 
-function useCustomMutation<P = Record<string, unknown>, T = Record<string, unknown>>(
+function useCustomMutation<P = Record<string, unknown>, T = Record<string, unknown> | FormData>(
   mutationData: Partial<SecureRequestProps> & Partial<UseMutationOptions> & { endpoint: string },
 ) {
   const {
@@ -37,10 +37,17 @@ function useCustomMutation<P = Record<string, unknown>, T = Record<string, unkno
     ...mutationData,
   })
   //   const { toast } = useNotification()
-
+  // const queryClient = useQueryClient()
   const mutatationResult = useMutation<BroResponseType<P>, ResponseErrorType, T>({
     mutationFn,
     mutationKey: endpoint,
+
+    //  onSuccess: (data) => {
+    //   // ✅ Check if invalidation is necessary
+    //   if (shouldInvalidate?.(data) !== false) {
+    //     invalidateKeys.forEach((key) => queryClient.invalidateQueries({ queryKey: [key] }));
+    //   }
+    // },
 
     onError: (err: any) => {
       console.log(err, "showing error from mutation")
@@ -56,13 +63,16 @@ function useCustomMutation<P = Record<string, unknown>, T = Record<string, unkno
     onSettled: (res: any, err: any) => {
       if (err) mutatationResult.reset()
       console.log(err, "showing err from settled")
-      // if (!err && showSuccessToast) {
-      //   // toast({
-      //   //   // title: `Request Successful`,
-      //   //   description: `${res?.data?.message}`,
-      //   //   appearance: "success",
-      //   // })
-      // }
+      if (!err) {
+        //   if (shouldInvalidate?.(data) !== false) {
+        //   invalidateKeys.forEach((key) => queryClient.invalidateQueries({ queryKey: [key] }));
+        // }
+        // toast({
+        //   // title: `Request Successful`,
+        //   description: `${res?.data?.message}`,
+        //   appearance: "success",
+        // })
+      }
       return
     },
     retry: false,
